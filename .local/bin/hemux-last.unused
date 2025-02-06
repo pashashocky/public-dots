@@ -1,0 +1,4 @@
+#!/bin/sh
+
+PREV_TMUX_COMMAND=`cat /tmp/prev-tmux-command`
+tmux send-keys -t 2 "$PREV_TMUX_COMMAND" Enter

@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+if [ -z "$1" ]; then
+  echo "Error: A file name must be set, e.g. on \"the wonderful thing about tiggers\"."
+  exit 1
+fi
+
+file_name=$(echo "$1")
+formatted_file_name=${file_name}.md
+cd "/Users/pash/Library/Mobile Documents/iCloud~md~obsidian/Documents/Ideaverse" || exit
+touch "+/${formatted_file_name}"
+echo "---" > "+/${formatted_file_name}"
+echo "up:" >> "+/${formatted_file_name}"
+echo "  - " >> "+/${formatted_file_name}"
+echo "related:" >> "+/${formatted_file_name}"
+echo "  - " >> "+/${formatted_file_name}"
+date=$(date "+%Y-%m-%d")
+echo "created: $date" >> "+/${formatted_file_name}"
+echo "tags:" >> "+/${formatted_file_name}"
+echo "  - " >> "+/${formatted_file_name}"
+echo "---" >> "+/${formatted_file_name}"
+hx "+/${formatted_file_name}"

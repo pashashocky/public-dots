@@ -1,0 +1,11 @@
+# previous themes
+# rose_pine
+# ferra
+# noctis_bordo
+
+inherits = "ferra"
+
+"ui.background" = { bg = "base" }
+
+[palette]
+base = "#262626"

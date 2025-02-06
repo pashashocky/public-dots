@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+set -o errexit -o pipefail -o noclobber -o nounset
+export FZF_DEFAULT_OPTS='--cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*" --preview="bat -n --color=always {}"'
+
+if [ $# -eq 0 ]; then
+	F=$( fasd -flR | fzf ) || exit 1
+	$EDITOR $F
+	printf "$EDITOR %s\n"  "$F" >> $HOME/.zsh-history
+	exit
+fi
+

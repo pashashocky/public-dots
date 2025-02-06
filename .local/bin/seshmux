@@ -1,0 +1,13 @@
+#!/bin/bash
+
+sesh list | awk -v repl=$HOME '{sub(/~/,repl)}1' | fzf-tmux -p 80%,60% \
+		--no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
+		--header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
+    --preview 'tree -C -L 2 {}' \
+		--bind 'tab:down,btab:up' \
+		--bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
+		--bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
+		--bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c)' \
+		--bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
+		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -t d --hidden --follow -E .Trash -E .git -E node_modules -E target -E .cargo -E .mypy_cache -E Library . ~)' \
+		--bind 'ctrl-d:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'

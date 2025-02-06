@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Script: datesort.sh
+# Description: Re-orders files in the current folder into a specific folder structure based on creation date.
+#              The final folder structure will be YYYY/YYYY-MM-DD.
+# Usage: ./datesort.sh
+
+# Get the current folder path
+current_folder=$(pwd)
+
+# Loop through each file in the current folder
+for file in "$current_folder"/*; do
+    # Check if the file is a regular file (not a directory)
+    if [ -f "$file" ]; then
+        # Get the creation date of the file
+        creation_date=$(stat -f "%SB" -t "%Y/%Y-%m-%d" "$file")
+
+        # Create the destination folder based on the creation date
+        destination_path="$current_folder/$creation_date"
+        mkdir -p "$destination_path"
+
+        # Move the file to the destination folder
+        mv "$file" "$destination_path"
+    fi
+done
