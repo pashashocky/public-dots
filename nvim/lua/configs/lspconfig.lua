@@ -10,7 +10,7 @@ M.on_attach = function(_, bufnr)
 
   map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
   map("n", "gd", vim.lsp.buf.definition, opts "Go to definition")
-  map("n", "gi", vim.lsp.buf.implementation, opts "Go to implementation")
+  map("n", "gii", vim.lsp.buf.implementation, opts "Go to implementation")
   map("n", "<leader>sh", vim.lsp.buf.signature_help, opts "Show signature help")
   map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
   map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
@@ -22,7 +22,7 @@ M.on_attach = function(_, bufnr)
   map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
   map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
 
-  map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action") -- NvChad/NvChad #3228
+  -- map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts "Code action") -- NvChad/NvChad #3228
   -- map("n", "gr", vim.lsp.buf.references, opts "Show references") -- in LspSaga mappings.lua
 end
 
@@ -98,6 +98,22 @@ local servers = {
       },
     },
   },
+  ruff = {},
+  pylsp = {
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = {
+              "W391", -- line eof
+              "W503", -- line break before binary operator
+            },
+            maxLineLength = 88,
+          },
+        },
+      },
+    },
+  },
 }
 
 for name, opts in pairs(servers) do
@@ -107,3 +123,5 @@ for name, opts in pairs(servers) do
 
   lspconfig[name].setup(opts)
 end
+
+vim.diagnostic.config { virtual_text = false }

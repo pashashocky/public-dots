@@ -37,9 +37,9 @@ map("n", "U", "<C-r>", { desc = "Redo change" })
 ---
 
 -- multicursor
-map({ "v", "n" }, "mc", "<cmd>MCstart<cr>", { desc = "Create a selection for selected text or word under the cursor" })
-map({ "v", "n" }, "ms", "<cmd>MCunderCursor<cr>", { desc = "Create a selection for the char under cursor" })
-map({ "v" }, "s", "<esc><cmd>MCvisualPattern<cr>", { desc = "Create a selection for inputted pattern" })
+map({ "n", "v" }, "mc", "<cmd>MCstart<cr>", { desc = "Create a selection for selected text or word under the cursor" })
+map("n", "ms", "<cmd>MCunderCursor<cr>", { desc = "Create a selection for the char under cursor" })
+map("v", "s", "<esc><cmd>MCvisualPattern<cr>", { desc = "Create a selection for inputted pattern" })
 
 -- vim general
 map("n", "n", "nzz", { desc = "Goto next search result" })
@@ -52,6 +52,8 @@ map("v", "<", "<gv", { desc = "indent right" })
 map({ "n", "x", "o" }, "mm", "%", { desc = "matching parenthesis", remap = true })
 
 -- Telescope
+local builtin = require "telescope.builtin"
+local utils = require "telescope.utils"
 map(
   "n",
   "<leader>fw",
@@ -61,14 +63,17 @@ map(
 map("n", "<leader>'", "<cmd>Telescope resume<CR>", { desc = "Open last telescope picker" })
 map("n", "<leader>fk", "<cmd> Telescope keymaps<CR>", { desc = "Telescope keymap" })
 map("n", "<leader>fp", "<cmd> Telescope projects<CR>", { desc = "Telescope projects" })
-map("n", "<leader>fc", function()
+map("n", "<leader>fcp", function()
   local root = string.gsub(vim.fn.system "git rev-parse --show-toplevel", "\n", "")
   if vim.v.shell_error == 0 then
-    require("telescope.builtin").find_files { cwd = root }
+    builtin.find_files { cwd = root }
   else
-    require("telescope.builtin").find_files()
+    builtin.find_files()
   end
 end, { desc = "Telescope find in current project" })
+map("n", "<leader>fcc", function()
+  builtin.find_files { cwd = utils.buffer_dir() }
+end, { desc = "Telescope find in current buffer dir" })
 
 map("n", "<leader>c?", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
 
@@ -96,12 +101,18 @@ map({ "n", "x", "o" }, "gw", "<Plug>(leap)", { desc = "Leap window" })
 map({ "n", "x", "o" }, "<leader>sl", "<Plug>(leap-anywhere)", { desc = "Leap anywhere" })
 
 -- conform
-map({ "n", "v" }, "<leader>fm", function()
+map({ "n", "v" }, "<leader>fmt", function()
   require("conform").format { async = true, lsp_fallback = true }
 end, { desc = "general format file" })
 
 -- git
 map("n", "<leader>gn", "<cmd>Neogit<CR>", { desc = "Neogit home" })
+
+-- slime
+map("n", "gz", "<Plug>SlimeMotionSend", { desc = "Slime send motion", remap = true, silent = false })
+map("n", "gzz", "<Plug>SlimeLineSend", { desc = "Slime send line", remap = true, silent = false })
+map("n", "gzc", "<Plug>SlimeConfig", { desc = "Slime config", remap = true, silent = false })
+map("x", "gz", "<Plug>SlimeRegionSend", { desc = "Slime send region", remap = true, silent = false })
 
 -- tmux
 map("n", "<C-h>", '<cmd>lua require("tmux").move_left()<cr>', { desc = "switch window left" })
@@ -109,11 +120,20 @@ map("n", "<C-l>", '<cmd>lua require("tmux").move_right()<cr>', { desc = "switch 
 map("n", "<C-j>", '<cmd>lua require("tmux").move_bottom()<cr>', { desc = "switch window down" })
 map("n", "<C-k>", '<cmd>lua require("tmux").move_top()<cr>', { desc = "switch window up" })
 
+-- mini
+map("n", "<leader>z", '<cmd>lua require("mini.misc").zoom()<cr>', { desc = "Full screen buffer" })
+
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
-map({ "n" }, "<leader>i", function()
+map({ "n", "t" }, "<A-f>", function()
   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
 end, { desc = "terminal toggle floating term" })
+map({ "n", "t" }, "<A-`>", function()
+  require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
+end, { desc = "terminal toggle horizontal term" })
+map("n", "<leader>s", function()
+  require("nvchad.term").new { pos = "sp" }
+end, { desc = "terminal new horizontal term" })
 
 -- fun
 map("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = "make it rain" })

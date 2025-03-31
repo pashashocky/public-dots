@@ -18,18 +18,19 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        "vim",
-        "html",
+        "bash",
+        "c",
         "css",
+        "html",
         "javascript",
         "json",
-        "toml",
-        "markdown",
-        "c",
-        "bash",
         "lua",
+        "markdown",
+        "python",
+        "toml",
         "tsx",
         "typescript",
+        "vim",
       },
 
       incremental_selection = {
@@ -141,6 +142,29 @@ return {
     end,
   },
 
+  -- mini.ai for inside and around text objects
+  {
+    "echasnovski/mini.ai",
+    event = "BufReadPost",
+    version = false,
+    config = function()
+      require("mini.ai").setup()
+    end,
+  },
+
+  -- mini.misc for zoom
+  {
+    "echasnovski/mini.misc",
+    lazy = false,
+    version = false,
+    config = function()
+      require("mini.misc").setup()
+    end,
+  },
+
+  -- direnv
+  { "direnv/direnv.vim", lazy = false },
+
   { -- git neogit
     "NeogitOrg/neogit",
     dependencies = {
@@ -178,6 +202,9 @@ return {
         ui = {
           code_action = "",
         },
+        diagnostic = {
+          diagnostic_only_current = true,
+        },
       }
     end,
     dependencies = {
@@ -186,11 +213,30 @@ return {
     },
   },
 
+  { -- vim slime
+    "jpalardy/vim-slime",
+    event = "BufReadPost",
+    init = function()
+      -- vim.g.slime_target = "neovim"
+      vim.g.slime_target = "tmux"
+      vim.g.slime_no_mappings = true
+    end,
+    config = function()
+      vim.g.slime_python_ipython = 1
+      vim.g.slime_input_pid = false
+      vim.g.slime_suggest_default = true
+      vim.g.slime_menu_config = false
+      vim.g.slime_neovim_ignore_unlisted = false
+    end,
+  },
+
   { -- projects
     "ahmedkhalf/project.nvim",
     lazy = false,
     config = function()
-      require("project_nvim").setup()
+      require("project_nvim").setup {
+        manual_mode = true,
+      }
     end,
   },
   { -- telescope
