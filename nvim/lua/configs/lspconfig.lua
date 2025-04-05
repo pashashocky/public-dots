@@ -107,6 +107,7 @@ local servers = {
             ignore = {
               "W391", -- line eof
               "W503", -- line break before binary operator
+              "E203", -- whitespace before ':'
             },
             maxLineLength = 88,
           },

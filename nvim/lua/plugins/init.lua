@@ -65,18 +65,28 @@ return {
     end,
   },
 
+  {
+    "folke/which-key.nvim",
+    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    cmd = "WhichKey",
+    opts = function()
+      dofile(vim.g.base46_cache .. "whichkey")
+      return { preset = "helix" }
+    end,
+  },
+
   -------------------------------- custom plugins -------------------------------
 
   --- movement / editing
   { -- bracket surround
     "tpope/vim-surround",
-    event = "BufReadPost",
+    lazy = false,
     dependencies = { "tpope/vim-repeat" },
   },
 
   { -- % match `'`, `"`, backtick and pipe
     "airblade/vim-matchquote",
-    event = "BufReadPost",
+    lazy = false,
   },
 
   { -- smooth scroll
@@ -126,29 +136,74 @@ return {
     end,
   },
 
-  ---
-
-  { -- dim inactive windows
-    "andreadev-it/shade.nvim",
-    lazy = false,
-    config = function()
-      require("shade").setup {
-        overlay_opacity = 75,
-        exclude_filetypes = { "NvimTree" },
-      }
-    end,
-    setup = function()
-      require("shade").toggle()
-    end,
-  },
-
-  -- mini.ai for inside and around text objects
-  {
+  { -- mini.ai for inside and around text objects
     "echasnovski/mini.ai",
-    event = "BufReadPost",
+    lazy = false,
     version = false,
     config = function()
       require("mini.ai").setup()
+    end,
+  },
+
+  { -- harpoon
+    "ThePrimeagen/harpoon",
+    lazy = false,
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local harpoon = require "harpoon"
+      local harpoon_extensions = require "harpoon.extensions"
+      harpoon.setup { settings = { save_on_toggle = true } }
+      harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
+      harpoon:extend {
+        UI_CREATE = function(cx)
+          vim.keymap.set("n", "<C-x>", function()
+            harpoon.ui:select_menu_item { vsplit = true }
+          end, { buffer = cx.bufnr })
+
+          vim.keymap.set("n", "<C-s>", function()
+            harpoon.ui:select_menu_item { split = true }
+          end, { buffer = cx.bufnr })
+
+          vim.keymap.set("n", "<C-t>", function()
+            harpoon.ui:select_menu_item { tabedit = true }
+          end, { buffer = cx.bufnr })
+        end,
+      }
+    end,
+  },
+
+  { -- rabbit
+    "voxelprismatic/rabbit.nvim",
+    lazy = false,
+    config = function()
+      require("rabbit").setup {
+        window = { float = "center" },
+        default_keys = {
+          close = { "<Esc>", "q", "<leader>" },
+          select = { "<CR>" },
+          open = { "<C-r>" },
+          file_add = { "a" },
+          file_del = { "<Del>" },
+          group = { "A" },
+          group_up = { "-" },
+        },
+      }
+    end,
+  },
+
+  ---
+
+  { -- dim inactive windows
+    "miversen33/sunglasses.nvim",
+    lazy = false,
+    config = function()
+      require("sunglasses").setup {
+        -- filter_type = "NOSYNTAX",
+        filter_type = "SHADE",
+        filter_percent = 0.25,
+        exclude_filetypes = { "NvimTree" },
+      }
     end,
   },
 
@@ -167,6 +222,7 @@ return {
 
   { -- git neogit
     "NeogitOrg/neogit",
+    lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim", -- required
       "sindrets/diffview.nvim", -- optional - Diff integration
@@ -215,10 +271,10 @@ return {
 
   { -- vim slime
     "jpalardy/vim-slime",
-    event = "BufReadPost",
+    lazy = false,
     init = function()
-      -- vim.g.slime_target = "neovim"
-      vim.g.slime_target = "tmux"
+      vim.g.slime_target = "neovim"
+      -- vim.g.slime_target = "tmux"
       vim.g.slime_no_mappings = true
     end,
     config = function()
@@ -244,9 +300,16 @@ return {
     opts = function()
       local teleg = require "telescope-live-grep-args.actions"
       local defaults = require "nvchad.configs.telescope"
+      local actions = require "telescope.actions"
       return vim.tbl_deep_extend("force", defaults, {
         extensions_list = { "fzf", "terms", "nerdy", "media", "live_grep_args", "projects" },
 
+        defaults = {
+          layout_strategy = "vertical",
+          layout_config = {
+            vertical = { width = 0.5, preview_height = 0.65 },
+          },
+        },
         extensions = {
           media = {
             backend = "ueberzug",
@@ -258,6 +321,22 @@ return {
                 ["<C-k>"] = teleg.quote_prompt(),
                 ["<C-i>"] = require("telescope-live-grep-args.actions").quote_prompt { postfix = " --iglob " },
               },
+            },
+          },
+        },
+        pickers = {
+          buffers = {
+            mappings = {
+              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+            },
+            find_files = {
+              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+            },
+            git_files = {
+              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+            },
+            old_files = {
+              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
             },
           },
         },
