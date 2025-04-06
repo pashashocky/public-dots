@@ -1,14 +1,18 @@
 require "nvchad.mappings"
 
 local map = vim.keymap.set
+local map_del = vim.keymap.del
 
 map("n", "<F5>", "<cmd> source <CR>", { desc = "Reload config" })
 
+-- unbind from nvchad
+map_del("n", "<leader>h")
+
 --- helix vibes
 -- movement
-map({ "n", "v" }, "gh", "0", { desc = "Goto line start" })
-map({ "n", "v" }, "gs", "^", { desc = "Goto first non blank on line" })
-map({ "n", "v" }, "gl", "$", { desc = "Goto line end" })
+map({ "n", "o", "x" }, "gh", "0", { desc = "Goto line start" })
+map({ "n", "o", "x" }, "gs", "^", { desc = "Goto first non blank on line" })
+map({ "n", "o", "x" }, "gl", "$", { desc = "Goto line end" })
 map({ "n", "v" }, "ge", "G", { desc = "Goto end of file" })
 map({ "n", "v" }, "gb", "ge", { desc = "Goto end of previous word" })
 
@@ -26,6 +30,13 @@ map("n", "gp", function()
   require("nvchad.tabufline").prev()
 end, { desc = "Goto previous buffer" })
 
+map("n", "<leader>tx", function()
+  if next(require("diffview.lib").views) ~= nil then
+    vim.cmd "DiffviewClose"
+  else
+    vim.cmd "tabclose"
+  end
+end, { desc = "Tab close" })
 map("n", "gx", function()
   require("nvchad.tabufline").close_buffer()
 end, {
@@ -44,11 +55,35 @@ map("v", "s", "<esc><cmd>MCvisualPattern<cr>", { desc = "Create a selection for 
 -- vim general
 map("n", "n", "nzz", { desc = "Goto next search result" })
 map("n", "N", "nzz", { desc = "Goto previous search result" })
-map("n", "<C-u>", "<C-u>zz", { desc = "Half page up", remap = true })
-map("n", "<C-d>", "<C-d>zz", { desc = "Half page down", remap = true })
 map("n", "<leader>fs", "<cmd> w <cr>", { desc = "Save" })
 map("n", "<leader>cc", "gcc", { desc = "Comment", remap = true })
 map("v", "<leader>cc", "gc", { desc = "Comment", remap = true })
+
+-- map("n", "<C-u>", "<C-u>zz", { desc = "Half page up" })
+-- map("n", "<C-d>", "<C-d>zz", { desc = "Half page down" })
+local neoscroll = require "neoscroll"
+local ns = require "configs.neoscroll"
+local keymap = {
+  ["<C-u>"] = function()
+    ns.scroll_and_center(-vim.wo.scroll, 100)
+  end,
+  ["<C-d>"] = function()
+    ns.scroll_and_center(vim.wo.scroll, 100)
+  end,
+  ["<C-y>"] = function()
+    neoscroll.scroll(-0.1, { move_cursor = false, duration = 80 })
+  end,
+  ["<C-e>"] = function()
+    neoscroll.scroll(0.1, { move_cursor = false, duration = 80 })
+  end,
+  ["zz"] = function()
+    neoscroll.zz { half_win_duration = 100 }
+  end,
+}
+local modes = { "n", "v", "x" }
+for key, func in pairs(keymap) do
+  map(modes, key, func)
+end
 
 map("v", "<leader>p", '"_dP', { desc = "Paste without copy" })
 map("v", ">", ">gv", { desc = "indent left" })
@@ -79,6 +114,7 @@ end, { desc = "Telescope find in current project" })
 map("n", "<leader>fcc", function()
   builtin.find_files { cwd = utils.buffer_dir() }
 end, { desc = "Telescope find in current buffer dir" })
+map("n", "<leader>gr", "<cmd>Telescope git_branches<cr>", { desc = "Telescope git branches" })
 
 map("n", "<leader>c?", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
 
@@ -129,7 +165,7 @@ end
 map("n", "<leader>a", function()
   harpoon:list():add()
 end, { desc = "Harpoon add to list" })
-map("n", "<leader>h", function()
+map("n", "<leader>hh", function()
   harpoon.ui:toggle_quick_menu(harpoon:list())
 end, { desc = "Harpoon show list" })
 vim.keymap.set("n", "<leader>fn", function()
@@ -160,11 +196,53 @@ map({ "n", "v" }, "<leader>fmt", function()
   require("conform").format { async = true, lsp_fallback = true }
 end, { desc = "general format file" })
 
+map({ "n", "v" }, "<leader>fmt", function()
+  require("conform").format { async = true, lsp_fallback = true }
+end, { desc = "general format file" })
+
 -- git
 map("n", "<leader>gn", "<cmd>Neogit<CR>", { desc = "Neogit home" })
 map("n", "<leader>gf", "<cmd>Neogit kind=floating<CR>", { desc = "Neogit home" })
 map("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", { desc = "Diff view open" })
 map("n", "<leader>gb", "<cmd>G blame<CR>", { desc = "Git blame" })
+
+-- git actions
+local gs = require "gitsigns"
+map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<cr>", { desc = "Stage hunk" })
+map({ "n", "v" }, "<leader>hr", ":Gitsigns stage_hunk<cr>", { desc = "Reset hunk" })
+map("n", "<leader>hx", "<cmd>wincmd p | q<cr>", { desc = "Exit diff view" })
+map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+map("n", "<leader>ha", gs.stage_hunk, { desc = "Stage hunk" })
+map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Git toggle current line blame" })
+map("n", "<leader>hd", gs.diffthis, { desc = "Git diff this" })
+map("n", "<leader>hD", function()
+  gs.diffthis "~"
+end, { desc = "Git diff this ~" })
+map("n", "<leader>hb", function()
+  gs.blame_line { full = true }
+end, { desc = "Show line blame" })
+map("n", "]c", function()
+  if vim.wo.diff then
+    return "]c"
+  end
+  vim.schedule(function()
+    gs.next_hunk()
+  end)
+  return "<Ignore>"
+end, { desc = "Select next hunk" })
+map("n", "[c", function()
+  if vim.wo.diff then
+    return "[c"
+  end
+  vim.schedule(function()
+    gs.prev_hunk()
+  end)
+  return "<Ignore>"
+end, { desc = "Select previous hunk" })
+map({ "o", "x" }, "ih", "<cmd>Gitsigns select_hunk<cr>", { desc = "Select hunk" })
 
 -- slime
 map("n", "gz", "<Plug>SlimeMotionSend", { desc = "Slime send motion", remap = true, silent = false })
@@ -172,11 +250,30 @@ map("n", "gzz", "<Plug>SlimeLineSend", { desc = "Slime send line", remap = true,
 map("n", "gzc", "<Plug>SlimeConfig", { desc = "Slime config", remap = true, silent = false })
 map("x", "gz", "<Plug>SlimeRegionSend", { desc = "Slime send region", remap = true, silent = false })
 
--- tmux
-map("n", "<C-h>", '<cmd>lua require("tmux").move_left()<cr>', { desc = "switch window left" })
-map("n", "<C-l>", '<cmd>lua require("tmux").move_right()<cr>', { desc = "switch window right" })
-map("n", "<C-j>", '<cmd>lua require("tmux").move_bottom()<cr>', { desc = "switch window down" })
-map("n", "<C-k>", '<cmd>lua require("tmux").move_top()<cr>', { desc = "switch window up" })
+-- smart-splits
+-- recommended mappings
+-- resizing splits
+-- these keymaps will also accept a range,
+-- for example `10<A-h>` will `resize_left` by `(10 * config.default_amount)`
+map("n", "<A-Left>", require("smart-splits").resize_left)
+map("n", "<A-Down>", require("smart-splits").resize_down)
+map("n", "<A-Up>", require("smart-splits").resize_up)
+map("n", "<A-Right>", require("smart-splits").resize_right)
+-- moving between splits
+map("n", "<A-n>", require("smart-splits").move_cursor_left) -- tmux
+map("n", "<A-e>", require("smart-splits").move_cursor_down)
+map("n", "<A-i>", require("smart-splits").move_cursor_up)
+map("n", "<A-o>", require("smart-splits").move_cursor_right)
+map("n", "<A-S-n>", require("smart-splits").move_cursor_left) -- wezterm
+map("n", "<A-S-e>", require("smart-splits").move_cursor_down)
+map("n", "<A-S-i>", require("smart-splits").move_cursor_up)
+map("n", "<A-S-o>", require("smart-splits").move_cursor_right)
+map("n", "<C-\\>", require("smart-splits").move_cursor_previous)
+-- swapping buffers between windows
+map("n", "<leader><leader>n", require("smart-splits").swap_buf_left, { desc = "Swap buf left" })
+map("n", "<leader><leader>e", require("smart-splits").swap_buf_down, { desc = "Swap buf down" })
+map("n", "<leader><leader>i", require("smart-splits").swap_buf_up, { desc = "Swap buf up" })
+map("n", "<leader><leader>o", require("smart-splits").swap_buf_right, { desc = "Swap buf right" })
 
 -- mini
 map("n", "<leader>z", '<cmd>lua require("mini.misc").zoom()<cr>', { desc = "Full screen buffer" })

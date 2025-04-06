@@ -91,9 +91,13 @@ return {
 
   { -- smooth scroll
     "karb94/neoscroll.nvim",
-    keys = { "<C-d>", "<C-u>", "<C-f>", "<C-b>", "zz", "n", "N", "<C-y>", "<C-e>" },
+    lazy = false,
     config = function()
-      require("neoscroll").setup()
+      local neoscroll = require "neoscroll"
+      neoscroll.setup {
+        mappings = { "<C-b>", "<C-f>", "zt", "zb" },
+        post_hook = require("configs.neoscroll").post_hook,
+      }
     end,
   },
 
@@ -259,7 +263,7 @@ return {
           code_action = "",
         },
         diagnostic = {
-          diagnostic_only_current = true,
+          diagnostic_only_current = false,
         },
       }
     end,
@@ -307,7 +311,7 @@ return {
         defaults = {
           layout_strategy = "vertical",
           layout_config = {
-            vertical = { width = 0.5, preview_height = 0.65 },
+            vertical = { width = 0.7, preview_height = 0.65 },
           },
         },
         extensions = {
@@ -353,10 +357,20 @@ return {
   "NvChad/nvcommunity",
   { import = "nvcommunity.editor.telescope-undo" },
 
-  { -- tmux TODO: replace with smart-splits
-    "aserowy/tmux.nvim",
+  { -- smart-splits
+    "mrjones2014/smart-splits.nvim",
+    lazy = false,
     config = function()
-      return require("tmux").setup()
+      require("smart-splits").setup {
+        ignored_filetypes = {
+          "NvimTree",
+        },
+        default_amount = 5, -- default number of lines to resize by
+        resize_mode = {
+          quit_key = "<ESC>", -- key to exit persistent resize mode
+          resize_keys = { "n", "e", "i", "o" }, -- keys to use for moving in resize mode
+        },
+      }
     end,
   },
 

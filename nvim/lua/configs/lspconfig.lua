@@ -125,4 +125,4 @@ for name, opts in pairs(servers) do
   lspconfig[name].setup(opts)
 end
 
-vim.diagnostic.config { virtual_text = false }
+vim.diagnostic.config { virtual_lines = { current_line = true }, virtual_text = false }
