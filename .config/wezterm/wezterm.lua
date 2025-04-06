@@ -41,6 +41,8 @@ config.font_size = 13
 config.color_scheme = "Catch Me If You Can (terminal.sexy)"
 -- config.color_scheme = "Fahrenheit"
 -- config.color_scheme = "Frontend Fun Forrest (Gogh)"
+config.colors = { cursor_bg = "#D8D4A2", cursor_border = "#D8D4A2" }
+
 --------
 
 -- Window Padding
