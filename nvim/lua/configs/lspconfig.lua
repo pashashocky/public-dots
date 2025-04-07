@@ -99,22 +99,22 @@ local servers = {
     },
   },
   ruff = {},
-  pylsp = {
-    settings = {
-      pylsp = {
-        plugins = {
-          pycodestyle = {
-            ignore = {
-              "W391", -- line eof
-              "W503", -- line break before binary operator
-              "E203", -- whitespace before ':'
-            },
-            maxLineLength = 88,
-          },
-        },
-      },
-    },
-  },
+  -- pylsp = {
+  --   settings = {
+  --     pylsp = {
+  --       plugins = {
+  --         pycodestyle = {
+  --           ignore = {
+  --             "W391", -- line eof
+  --             "W503", -- line break before binary operator
+  --             "E203", -- whitespace before ':'
+  --           },
+  --           maxLineLength = 88,
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
 }
 
 for name, opts in pairs(servers) do

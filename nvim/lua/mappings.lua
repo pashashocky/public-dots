@@ -7,6 +7,7 @@ map("n", "<F5>", "<cmd> source <CR>", { desc = "Reload config" })
 
 -- unbind from nvchad
 map_del("n", "<leader>h")
+map_del("t", "<A-i>")
 
 --- helix vibes
 -- movement
@@ -30,6 +31,7 @@ map("n", "gp", function()
   require("nvchad.tabufline").prev()
 end, { desc = "Goto previous buffer" })
 
+map("n", "<leader>tn", "<cmd>tabnew<cr>", { desc = "Tab new" })
 map("n", "<leader>tx", function()
   if next(require("diffview.lib").views) ~= nil then
     vim.cmd "DiffviewClose"
@@ -125,7 +127,8 @@ map("n", "<leader>co", "<cmd>:Lspsaga outgoing_calls<CR>", { desc = "LSP Outgoin
 map("n", "[d", "<cmd>:Lspsaga diagnostic_jump_prev<CR>", { desc = "Jump to previous diagnostic" })
 map("n", "]d", "<cmd>:Lspsaga diagnostic_jump_next<CR>", { desc = "Jump to next diagnostic" })
 map("n", "gr", "<cmd>:Lspsaga finder def+ref<CR>", { desc = "LSP Show references" })
-map("n", "<leader>gr", "<cmd>:Lspsaga finder def+ref+imp<CR>", { desc = "LSP Show def/ref/imp" })
+-- telescope git branches clash
+-- map("n", "<leader>gr", "<cmd>:Lspsaga finder def+ref+imp<CR>", { desc = "LSP Show def/ref/imp" })
 map("n", "<leader>k", "<cmd>:Lspsaga hover_doc<CR>", { desc = "LSP Hover documentation" })
 map("n", "<leader>K", "<cmd>:Lspsaga hover_doc ++keep<CR>", { desc = "LSP Hover documentation (pin)" })
 map("n", "<leader>re", "<cmd>:Lspsaga rename ++project<CR>", { desc = "LSP Rename in project" })
