@@ -4,7 +4,7 @@ local o = vim.o
 
 local options = {
   relativenumber = true, -- relative line numbers
-  lazyredraw = true, -- no redraw while executing macros
+  -- lazyredraw = true, -- no redraw while executing macros
   confirm = true, -- Confirm quitting unsaved, rather than error
 
   ignorecase = true, -- Case incensitive searches
