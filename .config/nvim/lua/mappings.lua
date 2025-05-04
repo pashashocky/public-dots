@@ -64,6 +64,7 @@ map("v", "<leader>cc", "gc", { desc = "Comment", remap = true })
 -- map("n", "<C-u>", "<C-u>zz", { desc = "Half page up" })
 -- map("n", "<C-d>", "<C-d>zz", { desc = "Half page down" })
 local neoscroll = require "neoscroll"
+---@diagnostic disable-next-line: different-requires
 local ns = require "configs.neoscroll"
 local keymap = {
   ["<C-u>"] = function()
@@ -143,6 +144,9 @@ map("n", "s", "<Plug>(leap-forward)", { desc = "Leap forward" }) -- don't bind v
 map("n", "S", "<Plug>(leap-backward)", { desc = "Leap backward" }) -- don't bind visual - surround
 map({ "n", "x", "o" }, "gw", "<Plug>(leap)", { desc = "Leap window" })
 map({ "n", "x", "o" }, "<leader>sl", "<Plug>(leap-anywhere)", { desc = "Leap anywhere" })
+
+-- rabbit
+map("n", "<A-r>", "<cmd>Rabbit<cr>", { desc = "Open Rabbit" })
 
 -- harpoon
 local harpoon = require "harpoon"
@@ -249,9 +253,9 @@ map({ "o", "x" }, "ih", "<cmd>Gitsigns select_hunk<cr>", { desc = "Select hunk" 
 
 -- slime
 map("n", "gz", "<Plug>SlimeMotionSend", { desc = "Slime send motion", remap = true, silent = false })
+map("x", "gz", "<Plug>SlimeRegionSend", { desc = "Slime send region", remap = true, silent = false })
 map("n", "gzz", "<Plug>SlimeLineSend", { desc = "Slime send line", remap = true, silent = false })
 map("n", "gzc", "<Plug>SlimeConfig", { desc = "Slime config", remap = true, silent = false })
-map("x", "gz", "<Plug>SlimeRegionSend", { desc = "Slime send region", remap = true, silent = false })
 
 -- smart-splits
 -- recommended mappings

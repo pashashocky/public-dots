@@ -97,6 +97,7 @@ return {
       local neoscroll = require "neoscroll"
       neoscroll.setup {
         mappings = { "<C-b>", "<C-f>", "zt", "zb" },
+        ---@diagnostic disable-next-line: different-requires
         post_hook = require("configs.neoscroll").post_hook,
       }
     end,
@@ -247,6 +248,7 @@ return {
     dependencies = {
       {
         "folke/todo-comments.nvim",
+        lazy = false,
         opts = {},
       },
     },
@@ -332,16 +334,16 @@ return {
         pickers = {
           buffers = {
             mappings = {
-              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+              i = { ["<Tab>"] = actions.select_drop, ["<A-Tab>"] = actions.select_tab_drop },
             },
             find_files = {
-              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+              i = { ["<Tab>"] = actions.select_drop, ["<A-Tab>"] = actions.select_tab_drop },
             },
             git_files = {
-              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+              i = { ["<Tab>"] = actions.select_drop, ["<A-Tab>"] = actions.select_tab_drop },
             },
             old_files = {
-              i = { ["<CR>"] = actions.select_drop, ["<Tab>"] = actions.select_tab_drop },
+              i = { ["<Tab>"] = actions.select_drop, ["<A-Tab>"] = actions.select_tab_drop },
             },
           },
         },
@@ -389,6 +391,7 @@ return {
     opts = {
       -- if you want to open yazi instead of netrw, see below for more info
       open_for_directories = false,
+      floating_window_scaling_factor = 0.6,
       keymaps = {
         show_help = "<f1>",
       },
