@@ -56,7 +56,7 @@ map("v", "s", "<esc><cmd>MCvisualPattern<cr>", { desc = "Create a selection for 
 
 -- vim general
 map("n", "n", "nzz", { desc = "Goto next search result" })
-map("n", "N", "nzz", { desc = "Goto previous search result" })
+map("n", "N", "Nzz", { desc = "Goto previous search result" })
 map("n", "<leader>fs", "<cmd> w <cr>", { desc = "Save" })
 map("n", "<leader>cc", "gcc", { desc = "Comment", remap = true })
 map("v", "<leader>cc", "gc", { desc = "Comment", remap = true })
@@ -212,7 +212,7 @@ map("n", "<leader>gb", "<cmd>G blame<CR>", { desc = "Git blame" })
 -- git actions
 local gs = require "gitsigns"
 map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<cr>", { desc = "Stage hunk" })
-map({ "n", "v" }, "<leader>hr", ":Gitsigns stage_hunk<cr>", { desc = "Reset hunk" })
+map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
 map("n", "<leader>hx", "<cmd>wincmd p | q<cr>", { desc = "Exit diff view" })
 map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
 map("n", "<leader>ha", gs.stage_hunk, { desc = "Stage hunk" })

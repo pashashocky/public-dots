@@ -19,6 +19,8 @@ local options = {
   backspace = "indent,eol,start",
 
   colorcolumn = "88",
+
+  laststatus = 2, -- status in every split
 }
 
 for k, v in pairs(options) do
