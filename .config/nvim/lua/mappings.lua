@@ -7,6 +7,8 @@ map("n", "<F5>", "<cmd> source <CR>", { desc = "Reload config" })
 
 -- unbind from nvchad
 map_del("n", "<leader>h")
+map_del("n", "gb")
+map_del("n", "gbc")
 map_del("t", "<A-i>")
 
 --- helix vibes
@@ -15,7 +17,7 @@ map({ "n", "o", "x" }, "gh", "0", { desc = "Goto line start" })
 map({ "n", "o", "x" }, "gs", "^", { desc = "Goto first non blank on line" })
 map({ "n", "o", "x" }, "gl", "$", { desc = "Goto line end" })
 map({ "n", "v" }, "ge", "G", { desc = "Goto end of file" })
-map({ "n", "v" }, "gb", "ge", { desc = "Goto end of previous word" })
+map("n", "<C-l>", "<C-i>", { noremap = true })
 
 map("n", "<A-d>", '"_dd', { desc = "Delete without cut" })
 map("v", "<A-d>", '"_d', { desc = "Delete without cut" })
@@ -104,8 +106,8 @@ map(
   { desc = "Telescope live grep" }
 )
 map("n", "<leader>'", "<cmd>Telescope resume<CR>", { desc = "Open last telescope picker" })
-map("n", "<leader>fk", "<cmd> Telescope keymaps<CR>", { desc = "Telescope keymap" })
-map("n", "<leader>fp", "<cmd> Telescope projects<CR>", { desc = "Telescope projects" })
+map("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Telescope keymap" })
+map("n", "<leader>fp", "<cmd>Telescope projects<CR>", { desc = "Telescope projects" })
 map("n", "<leader>fcp", function()
   local root = string.gsub(vim.fn.system "git rev-parse --show-toplevel", "\n", "")
   if vim.v.shell_error == 0 then
@@ -133,6 +135,19 @@ map("n", "gr", "<cmd>:Lspsaga finder def+ref<CR>", { desc = "LSP Show references
 map("n", "<leader>k", "<cmd>:Lspsaga hover_doc<CR>", { desc = "LSP Hover documentation" })
 map("n", "<leader>K", "<cmd>:Lspsaga hover_doc ++keep<CR>", { desc = "LSP Hover documentation (pin)" })
 map("n", "<leader>re", "<cmd>:Lspsaga rename ++project<CR>", { desc = "LSP Rename in project" })
+
+-- Noice
+map({ "n", "i", "s" }, "<c-f>", function()
+  if not require("noice.lsp").scroll(4) then
+    return "<c-f>"
+  end
+end, { silent = true, expr = true })
+
+map({ "n", "i", "s" }, "<c-b>", function()
+  if not require("noice.lsp").scroll(-4) then
+    return "<c-b>"
+  end
+end, { silent = true, expr = true })
 
 -- leap (space/backspace - move to next suggestion group), after keybind:
 -- {char1}{char2}
@@ -197,6 +212,11 @@ end)
 map("n", "<C-A-f>", function()
   harpoon:list():next()
 end)
+
+-- snipe
+map("n", "gb", function()
+  require("snipe").open_buffer_menu()
+end, { desc = "Open Snipe buffer menu" })
 
 -- conform
 map({ "n", "v" }, "<leader>fmt", function()
@@ -271,6 +291,10 @@ map("n", "<A-n>", require("smart-splits").move_cursor_left) -- tmux
 map("n", "<A-e>", require("smart-splits").move_cursor_down)
 map("n", "<A-i>", require("smart-splits").move_cursor_up)
 map("n", "<A-o>", require("smart-splits").move_cursor_right)
+map("t", "<A-n>", "<C-\\><C-N>:lua require('smart-splits').move_cursor_left()<cr>", { silent = true }) -- terminal
+map("t", "<A-e>", "<C-\\><C-N>:lua require('smart-splits').move_cursor_down()<cr>", { silent = true })
+map("t", "<A-i>", "<C-\\><C-N>:lua require('smart-splits').move_cursor_up()<cr>", { silent = true })
+map("t", "<A-o>", "<C-\\><C-N>:lua require('smart-splits').move_cursor_right()<cr>", { silent = true })
 map("n", "<A-S-n>", require("smart-splits").move_cursor_left) -- wezterm
 map("n", "<A-S-e>", require("smart-splits").move_cursor_down)
 map("n", "<A-S-i>", require("smart-splits").move_cursor_up)
@@ -284,6 +308,10 @@ map("n", "<leader><leader>o", require("smart-splits").swap_buf_right, { desc = "
 
 -- mini
 map("n", "<leader>z", '<cmd>lua require("mini.misc").zoom()<cr>', { desc = "Full screen buffer" })
+
+-- session restore
+map("n", "<leader>wr", "<cmd>SessionRestore<cr>", { desc = "Restore cwd session" })
+map("n", "<leader>ws", "<cmd>SessionSearch<cr>", { desc = "Search cwd session" })
 
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "Escape terminal mode" })
@@ -299,4 +327,4 @@ end, { desc = "New horizontal term" })
 
 -- fun
 map("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = "make it rain" })
-map("n", "<Bslash>", "<cmd>SunglassesToggle<cr>", { desc = "Toggle sunglasses" })
+map("n", "<Bslash>", "<cmd>SunglassesEnableToggle<cr>", { desc = "Toggle sunglasses" })

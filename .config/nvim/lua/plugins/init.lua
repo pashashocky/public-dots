@@ -14,6 +14,8 @@ return {
     end,
   },
 
+  { import = "nvchad.blink.lazyspec" }, -- completion
+
   { -- syntax highlighting
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -109,6 +111,7 @@ return {
       --   `nvim-notify` is only needed, if you want to use the notification view.
       --   If not available, we use `mini` as the fallback
       "rcarriga/nvim-notify",
+      "hrsh7th/nvim-cmp",
     },
   },
 
@@ -232,6 +235,46 @@ return {
     end,
   },
 
+  {
+    "leath-dub/snipe.nvim",
+    lazy = false,
+    opts = {
+      ui = { position = "cursor" },
+      hints = { dictionary = "arstneiogmdhcvk" },
+      navigate = {
+        -- When the list is too long it is split into pages
+        -- `[next|prev]_page` options allow you to navigate
+        -- this list
+        next_page = "<c-f>",
+        prev_page = "<c-b>",
+
+        -- You can also just use normal navigation to go to the item you want
+        -- this option just sets the keybind for selecting the item under the
+        -- cursor
+        under_cursor = "<cr>",
+
+        -- In case you changed your mind, provide a keybind that lets you
+        -- cancel the snipe and close the window.
+        ---@type string|string[]
+        cancel_snipe = { "q", "<esc>" },
+
+        -- Close the buffer under the cursor
+        -- Remove "j" and "k" from your dictionary to navigate easier to delete
+        -- NOTE: Make sure you don't use the character below on your dictionary
+        close_buffer = "D",
+
+        -- Open buffer in vertical split
+        open_vsplit = "V",
+
+        -- Open buffer in split, based on `vim.opt.splitbelow`
+        open_split = "X",
+
+        -- Change tag manually
+        change_tag = "C",
+      },
+    },
+  },
+
   ---
 
   { -- dim inactive windows
@@ -259,6 +302,12 @@ return {
 
   -- direnv
   { "direnv/direnv.vim", lazy = false },
+
+  -- zoxide
+  {
+    "nanotee/zoxide.vim",
+    lazy = false,
+  },
 
   { -- git neogit
     "NeogitOrg/neogit",
@@ -336,6 +385,20 @@ return {
       }
     end,
   },
+  { -- session restoring
+    "rmagatti/auto-session",
+    lazy = false,
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      auto_restore = false,
+      suppressed_dirs = { "~/", "~/code", "~/Downloads", "/" },
+      -- log_level = 'debug',
+    },
+  },
+
   { -- telescope
     "nvim-telescope/telescope.nvim",
     opts = function()
@@ -394,7 +457,7 @@ return {
   "NvChad/nvcommunity",
   { import = "nvcommunity.editor.telescope-undo" },
 
-  {
+  { -- file explorer
     "mikavilpas/yazi.nvim",
     event = "VeryLazy",
     dependencies = {
@@ -435,6 +498,21 @@ return {
       -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
       -- vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
+    end,
+  },
+
+  {
+    "MagicDuck/grug-far.nvim",
+    -- Note (lazy loading): grug-far.lua defers all it's requires so it's lazy by default
+    -- additional lazy config to defer loading is not really needed...
+    lazy = false,
+    config = function()
+      -- optional setup call to override plugin options
+      -- alternatively you can set options with vim.g.grug_far = { ... }
+      require("grug-far").setup {
+        -- options, see Configuration section below
+        -- there are no required options atm
+      }
     end,
   },
 
