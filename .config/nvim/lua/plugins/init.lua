@@ -15,6 +15,28 @@ return {
   },
 
   { import = "nvchad.blink.lazyspec" }, -- completion
+  {
+    "saghen/blink.cmp",
+    opts = {
+      keymap = {
+        preset = "default",
+        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+        ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+      },
+      -- completion = {
+      --   ghost_text = {
+      --     enabled = false,
+      --   },
+      -- },
+    },
+    sources = {
+      defualt = { "lsp", "buffer", "snippets", "path" },
+      -- per_filetype = { sql = { "dadbod" } },
+      -- providers = {
+      --   dadbod = { module = "vim_dadbod_completion.blink" },
+      -- },
+    },
+  },
 
   { -- syntax highlighting
     "nvim-treesitter/nvim-treesitter",
